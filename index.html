@@ -49,7 +49,7 @@
       device-orientation-permission-ui="enabled: true"
     >
       <a-assets>
-        <a-asset-item id="qutubModel" src="assets/targets.mind"></a-asset-item>
+        <a-asset-item id="qutubModel" src="assets/qutub.glb"></a-asset-item>
       </a-assets>
 
       <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
@@ -67,7 +67,9 @@
     </a-scene>
 
     <div id="ui">
-      <button onclick="alert('Gemini coming soon')">Talk to Monument</button>
+        <button onclick="handleTalk()">Talk to Monument</button>
+        <p id="story" style="margin-top:10px;font-size:14px;"></p>
+      <!-- <button onclick="alert('Gemini coming soon')">Talk to Monument</button> -->
     </div>
 
     <script>
@@ -76,5 +78,19 @@
         .querySelector("a-scene")
         .addEventListener("targetFound", () => (ui.style.display = "block"));
     </script>
+
+    <script src="js/gemini.js"></script>
+
+    <script>
+    async function handleTalk() {
+        const output = document.getElementById("story");
+        output.innerText = "Thinking...";
+
+        const text = await talkToMonument("Qutub Minar");
+        output.innerText = text;
+    }
+    </script>
+
+
   </body>
 </html>
