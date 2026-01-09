@@ -1,4 +1,4 @@
-const API_KEY = "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";
+const API_KEY = window.__API_KEY__;
 const MODEL = "openai/gpt-3.5-turbo";
 
 async function talkToMonument(monumentName) {

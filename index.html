@@ -88,7 +88,8 @@
 </button>
 
   </div>
-
+  
+  <script src="config.js"></script>
   <script src="js/llm.js"></script>
 
   <script>
@@ -129,7 +130,7 @@
     const utterance = new SpeechSynthesisUtterance(text);
 
     // Voice tuning (important)
-    utterance.lang = "en-IN";      // Indian English
+    utterance.lang = "hi-IN";      // Indian Hindi
     utterance.rate = 0.95;         // Natural pace
     utterance.pitch = 1;
     utterance.volume = 1;
