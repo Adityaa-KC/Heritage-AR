@@ -7,7 +7,7 @@ You are a cultural heritage guide.
 Give a short, engaging introduction of ${monumentName} in under 60 words.
 Tone: respectful, modern, informative.
 Explain in genz style
-Language: english.
+Language: hindi.
 `;
 
   return callLLM(prompt);
