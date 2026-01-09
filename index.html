@@ -29,12 +29,14 @@
       left: 50%;
       transform: translateX(-50%);
       backdrop-filter: blur(12px);
-      background: rgba(255,255,255,0.25);
+      background: rgba(3, 205, 61, 0.581);
       padding: 14px 22px;
       border-radius: 18px;
       z-index: 10;
-      color: white;
+      color: rgb(1, 1, 1);
       text-align: center;
+
+      
     }
   </style>
 </head>
@@ -42,48 +44,109 @@
 <body>
 
   <model-viewer
-  src="assets/qutub.glb"
+  src="assets/nalanda.glb"
   alt="Qutub Minar 3D Model"
 
   camera-controls
   enable-pan
   auto-rotate
-  rotation-per-second="15deg"
 
-  min-camera-orbit="auto auto 2m"
-  max-camera-orbit="auto auto 8m"
-  camera-target="0m 1.5m 0m"
+  min-camera-orbit="auto auto 0.2m"
+  max-camera-orbit="auto auto 5m"
+  camera-target="0m 0.5m 0m"
 
   shadow-intensity="1"
-  exposure="1.3"
+  shadow-softness="0.8"
+  exposure="1.5"
   tone-mapping="aces"
 
-  environment-image="https://modelviewer.dev/shared-assets/environments/neutral.hdr"
-  skybox-image="https://modelviewer.dev/shared-assets/environments/neutral.hdr"
+  environment-image="https://modelviewer.dev/shared-assets/environments/spruit_sunrise_1k_HDR.hdr"
+  skybox-image="https://modelviewer.dev/shared-assets/environments/spruit_sunrise_1k_HDR.hdr"
 
-  style="background: linear-gradient(180deg, #e6dccc 0%, #cbb89d 100%);"
+  style="width:100vw; height:100vh; filter: sepia(50%) saturate(150%);"
+
 >
-  <div slot="progress-bar" style="display:none;"></div>
-  shadow-softness="0.6"
 </model-viewer>
-
 
   <div id="ui">
     <button onclick="handleTalk()">Talk to Monument</button>
     <p id="story" style="margin-top:10px;font-size:14px;"></p>
+    <div style="margin-top:10px;">
+      <input id="questionInput" type="text" placeholder="Ask a question about this monument..." style="
+        width: 220px;
+        padding: 8px;
+        border-radius: 10px;
+        border: none;
+        outline: none;
+      " />
+      <button onclick="handleQuestion()" style="margin-top:6px;">
+        Ask
+      </button>
+    </div>
+    <button onclick="handleSpeak()" style="margin-top:8px;">
+  🔊 Listen
+</button>
+
   </div>
 
-  <script src="js/gemini.js"></script>
+  <script src="js/llm.js"></script>
 
   <script>
     async function handleTalk() {
       const output = document.getElementById("story");
       output.innerText = "Thinking...";
 
-      const text = await talkToMonument("Qutub Minar");
+      const text = await talkToMonument("Nalanda University ");
       output.innerText = text;
     }
   </script>
+  <script>
+  async function handleQuestion() {
+    const input = document.getElementById("questionInput");
+    const output = document.getElementById("story");
+
+    const question = input.value.trim();
+    if (!question) return;
+
+    output.innerText = "Thinking...";
+    input.value = "";
+
+    const answer = await askQuestion("Qutub Minar", question);
+    output.innerText = answer;
+  }
+</script>
+ 
+<script>
+  function speakText(text) {
+    if (!("speechSynthesis" in window)) {
+      alert("Text-to-Speech not supported on this browser");
+      return;
+    }
+
+    // Stop any ongoing speech
+    window.speechSynthesis.cancel();
+
+    const utterance = new SpeechSynthesisUtterance(text);
+
+    // Voice tuning (important)
+    utterance.lang = "en-IN";      // Indian English
+    utterance.rate = 0.95;         // Natural pace
+    utterance.pitch = 1;
+    utterance.volume = 1;
+
+    window.speechSynthesis.speak(utterance);
+  }
+</script>
+
+<script>
+  function handleSpeak() {
+    const text = document.getElementById("story").innerText;
+    if (!text || text === "Thinking...") return;
+    speakText(text);
+  }
+</script>
+
+
 
 </body>
 </html>
