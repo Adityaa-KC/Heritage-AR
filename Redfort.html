@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Red Fort</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Model Viewer -->
+    <script
+      type="module"
+      src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"
+    ></script>
+
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+
+  <body>
+    <!-- LOCAL 3D MODEL -->
+    <model-viewer
+      src="assets/RedFort.glb"
+      alt="Red Fort 3D Model"
+      camera-controls
+      enable-pan
+      auto-rotate
+      min-camera-orbit="auto auto 1m"
+      max-camera-orbit="auto auto 5m"
+      camera-target="0m -0.2m 0m"
+      exposure="1.25"
+      tone-mapping="aces"
+      environment-image="https://modelviewer.dev/shared-assets/environments/spruit_sunrise_1k_HDR.hdr"
+      skybox-image="https://modelviewer.dev/shared-assets/environments/spruit_sunrise_1k_HDR.hdr"
+      shadow-intensity="1"
+      shadow-softness="0.8"
+    >
+    </model-viewer>
+
+    <!-- AI UI -->
+    <div id="ui">
+      <button onclick="handleTalk()">Talk to Monument</button>
+      <button id="backBtn" onclick="handleBack()" style="display: none">
+        ⬅ Back
+      </button>
+      <p id="story"></p>
+
+      <input id="questionInput" placeholder="Ask about Red Fort" />
+
+      <button onclick="handleQuestion()">Ask</button>
+      <button onclick="handleSpeak()">🔊 Listen</button>
+    </div>
+
+    <script src="config.js"></script>
+    <script src="js/llm.js"></script>
+
+    <script>
+      const MONUMENT = "Red Fort";
+
+      async function handleTalk() {
+        const out = document.getElementById("story");
+        const backBtn = document.getElementById("backBtn");
+
+        out.innerText = "Thinking...";
+        backBtn.style.display = "block";
+
+        out.innerText = await talkToMonument(MONUMENT);
+      }
+
+      async function handleQuestion() {
+        const input = document.getElementById("questionInput");
+        const out = document.getElementById("story");
+        const backBtn = document.getElementById("backBtn");
+
+        if (!input.value) return;
+
+        out.innerText = "Thinking...";
+        backBtn.style.display = "block";
+
+        out.innerText = await askQuestion(MONUMENT, input.value);
+        input.value = "";
+      }
+    </script>
+
+    <script>
+      function speakText(text) {
+        if (!("speechSynthesis" in window)) {
+          alert("Text-to-Speech not supported on this browser");
+          return;
+        }
+
+        // Stop any ongoing speech
+        window.speechSynthesis.cancel();
+
+        const utterance = new SpeechSynthesisUtterance(text);
+
+        // Voice tuning (important)
+        utterance.lang = "hi-IN"; // Indian Hindi
+        utterance.rate = 0.95; // Natural pace
+        utterance.pitch = 1;
+        utterance.volume = 1;
+
+        window.speechSynthesis.speak(utterance);
+      }
+    </script>
+
+    <script>
+      function handleSpeak() {
+        speakText(document.getElementById("story").innerText);
+      }
+    </script>
+
+    <script>
+      function handleBack() {
+        const out = document.getElementById("story");
+        const input = document.getElementById("questionInput");
+        const backBtn = document.getElementById("backBtn");
+
+        out.innerText = "";
+        if (input) input.value = "";
+
+        backBtn.style.display = "none";
+
+        if ("speechSynthesis" in window) {
+          speechSynthesis.cancel();
+        }
+      }
+    </script>
+  </body>
+</html>

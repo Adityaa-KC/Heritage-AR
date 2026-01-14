@@ -1,30 +1,28 @@
 const API_KEY = window.__API_KEY__;
 const MODEL = "openai/gpt-3.5-turbo";
 
-async function talkToMonument(monumentName) {
-  const prompt = `
-You are a cultural heritage guide.
-Give a short, engaging introduction of ${monumentName} in under 60 words.
-Tone: respectful, modern, informative.
-Explain in genz style
-Language: hindi.
-`;
+async function talkToMonument(monument) {
+  const res = await fetch("/.netlify/functions/ai", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ monument })
+  });
 
-  return callLLM(prompt);
+  const data = await res.json();
+  return data.text;
 }
 
-async function askQuestion(monumentName, question) {
-  const prompt = `
-You are a knowledgeable heritage expert.
-Answer the question about ${monumentName} clearly and concisely.
-Explain in genz style
-Language: Hindi.
+async function askQuestion(monument, question) {
+  const res = await fetch("/.netlify/functions/ai", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ monument, question })
+  });
 
-Question: ${question}
-`;
-
-  return callLLM(prompt);
+  const data = await res.json();
+  return data.text;
 }
+
 
 async function callLLM(prompt) {
   try {
@@ -59,5 +57,26 @@ async function callLLM(prompt) {
   } catch (error) {
     console.error(error);
     return "AI is temporarily unavailable.";
+  }
+}
+
+
+function handleBack() {
+  const out = document.getElementById("story");
+  const input = document.getElementById("questionInput");
+  const backBtn = document.getElementById("backBtn");
+
+  // Clear text
+  out.innerText = "";
+
+  // Clear input
+  if (input) input.value = "";
+
+  // Hide back button
+  backBtn.style.display = "none";
+
+  // Stop any ongoing speech
+  if ("speechSynthesis" in window) {
+    window.speechSynthesis.cancel();
   }
 }
