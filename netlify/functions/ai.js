@@ -18,7 +18,7 @@ export async function handler(event) {
     body: JSON.stringify({
       model: "openai/gpt-3.5-turbo",
       messages: [{ role: "user", content: prompt }],
-      max_tokens: 150
+      max_tokens: 500
     })
   });
 
