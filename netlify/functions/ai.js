@@ -7,7 +7,7 @@ export async function handler(event) {
 
   const prompt = question
     ? `Answer this question about ${monument}: ${question}`
-    : `Give a short engaging explanation of ${monument} in under 60 words.`;
+    : `Give a short engaging "unsuni daastaan" or mysterious story of ${monument} in under 500 words.`;
 
   const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
     method: "POST",
