@@ -1,153 +1,141 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>Heritage Viewer</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HEIRS OF HISTORY</title>
+    <link rel="stylesheet" href="stylenew.css" />
+    <link rel="stylesheet" href="utils.css" />
+  </head>
+  <body>
+    <div class="container mx-auto">
+      <header>
+        <nav class="flex justify-between">
+          <div class="font-bold flex item-center text-blue logo heading">
+            HEIRS OF HISTORY.
+          </div>
+          <ul class="navbar flex item-center">
+            <li>Scan</li>
+            <li>Our Mission</li>
+            <li><a href="archieves.html">Archives</a></li>
+            <li><a href="delhi_monuments.html">Delhi Monuments</a></li>
+            <li>Contact Us</li>
+            <li><button class="btn">Explore</button></li>
+          </ul>
+        </nav>
+      </header>
+      <main class="min-h-screen">
+        <section class="section1">
+          <div class="flex">
+            <div class="topleft flex justify-center flex-col px-2">
+              <h1 class="my-1">Documentation is Preservation</h1>
+              <p>
+                Stop reading history. Start walking through it. Experience the
+                world's wonders through hyper-realistic, location-based
+                Augmented Reality.
+              </p>
+            </div>
+            <div class="topright">
+              <img src="assets/monument.jpg" alt="hehe" />
+            </div>
+          </div>
+        </section>
 
-  <!-- Model Viewer -->
-  <script type="module"
-    src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js">
-  </script>
+        <section class="section2">
+          <h2 class="section-title">Point. Scan. Restore.</h2>
 
-  <style>
-    body {
-      margin: 0;
-      background: #000;
-      font-family: sans-serif;
-      overflow: hidden;
-    }
+          <div class="flex feature-wrapper">
+            <div class="feature-card">
+              <h3>Instant Restoration</h3>
+              <p>
+                Point your device at any heritage site. Our ARCore engine
+                overlays hyper-realistic 3D reconstructions with
+                centimeter-level precision. See temples as they stood 1,000
+                years ago, not as they look today.
+              </p>
+              <span class="micro-copy"
+                >Don’t just visit history. Vibe with it.</span
+              >
+            </div>
 
-    model-viewer {
-      width: 100vw;
-      height: 100vh;
-      background: linear-gradient(#111, #000);
-    }
+            <div class="feature-card">
+              <h3>Gemini-Powered Intelligence</h3>
+              <p>
+                Scan any inscription, statue, or ruin. Our integrated Gemini AI
+                identifies the artifact in real time, translating ancient
+                scripts and narrating stories with a modern, conversational
+                edge.
+              </p>
+              <span class="micro-copy">History is too cool to be boring.</span>
+            </div>
+          </div>
+        </section>
 
-    #ui {
-      position: fixed;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      backdrop-filter: blur(12px);
-      background: rgba(3, 205, 61, 0.581);
-      padding: 14px 22px;
-      border-radius: 18px;
-      z-index: 10;
-      color: rgb(1, 1, 1);
-      text-align: center;
+        <section class="section3">
+          <h2 class="section-title">The Google-Powered Stack</h2>
 
-      
-    }
-  </style>
-</head>
+          <div class="tech-grid">
+            <div class="tech-card">
+              <h4>Geospatial Creator</h4>
+              <p>
+                We leverage Google Maps data to anchor 3D content to real-world
+                coordinates. History doesn’t float—it stays exactly where it was
+                built.
+              </p>
+            </div>
 
-<body>
+            <div class="tech-card">
+              <h4>ARCore Extensions</h4>
+              <p>
+                Realistic lighting, environmental occlusion, and plane detection
+                make our digital assets feel like physical objects.
+              </p>
+            </div>
 
-  <model-viewer
-  src="assets/RedFort.glb"
-  alt="Qutub Minar 3D Model"
+            <div class="tech-card">
+              <h4>Gemini Pro Multimodal</h4>
+              <p>
+                Visual-to-Text processing. We don’t just show you data; we
+                understand what you are looking at.
+              </p>
+            </div>
 
-  camera-controls
-  enable-pan
-  auto-rotate
+            <div class="tech-card">
+              <h4>Firebase</h4>
+              <p>
+                Real-time synchronization for community-led documentation and
+                global high-scores in our “Heritage Hunt” mode.
+              </p>
+            </div>
+          </div>
+        </section>
 
-  min-camera-orbit="auto auto 0.2m"
-  max-camera-orbit="auto auto 5m"
-  camera-target="0m 0.5m 0m"
+        <section class="section4">
+          <h2 class="section-title">
+            Documentation is the only way to save the past.
+          </h2>
 
-  shadow-intensity="1"
-  shadow-softness="0.8"
-  exposure="1.5"
-  tone-mapping="aces"
+          <p class="impact-text">
+            Every year, physical heritage sites are lost to climate, urban
+            sprawl, and time. Heirs of History creates a permanent, digital
+            “living record.” By making heritage interactive and social-ready, we
+            ensure the next generation values preservation as much as progress.
+          </p>
 
-  environment-image="https://modelviewer.dev/shared-assets/environments/spruit_sunrise_1k_HDR.hdr"
-  skybox-image="https://modelviewer.dev/shared-assets/environments/spruit_sunrise_1k_HDR.hdr"
+          <span class="micro-copy"
+            >Built for the curious. Powered by Google.</span
+          >
+        </section>
+      </main>
+      <footer class="footer">
+        <p>Built for TechSprint 2026 · Powered by Google ARCore & Gemini</p>
 
-  style="width:100vw; height:100vh; filter: sepia(50%) saturate(150%);"
-
->
-</model-viewer>
-
-  <div id="ui">
-    <button onclick="handleTalk()">Talk to Monument</button>
-    <p id="story" style="margin-top:10px;font-size:14px;"></p>
-    <div style="margin-top:10px;">
-      <input id="questionInput" type="text" placeholder="Ask a question about this monument..." style="
-        width: 220px;
-        padding: 8px;
-        border-radius: 10px;
-        border: none;
-        outline: none;
-      " />
-      <button onclick="handleQuestion()" style="margin-top:6px;">
-        Ask
-      </button>
+        <div class="footer-links">
+          <span>GitHub Repo</span>
+          <span>Project Documentation</span>
+          <span>Contact the Team</span>
+        </div>
+      </footer>
     </div>
-    <button onclick="handleSpeak()" style="margin-top:8px;">
-  🔊 Listen
-</button>
-
-  </div>
-  
-  <script src="config.js"></script>
-  <script src="js/llm.js"></script>
-
-  <script>
-    async function handleTalk() {
-      const output = document.getElementById("story");
-      output.innerText = "Thinking...";
-
-      const text = await talkToMonument("Nalanda University ");
-      output.innerText = text;
-    }
-  </script>
-  <script>
-  async function handleQuestion() {
-    const input = document.getElementById("questionInput");
-    const output = document.getElementById("story");
-
-    const question = input.value.trim();
-    if (!question) return;
-
-    output.innerText = "Thinking...";
-    input.value = "";
-
-    const answer = await askQuestion("Qutub Minar", question);
-    output.innerText = answer;
-  }
-</script>
- 
-<script>
-  function speakText(text) {
-    if (!("speechSynthesis" in window)) {
-      alert("Text-to-Speech not supported on this browser");
-      return;
-    }
-
-    // Stop any ongoing speech
-    window.speechSynthesis.cancel();
-
-    const utterance = new SpeechSynthesisUtterance(text);
-
-    // Voice tuning (important)
-    utterance.lang = "hi-IN";      // Indian Hindi
-    utterance.rate = 0.95;         // Natural pace
-    utterance.pitch = 1;
-    utterance.volume = 1;
-
-    window.speechSynthesis.speak(utterance);
-  }
-</script>
-
-<script>
-  function handleSpeak() {
-    const text = document.getElementById("story").innerText;
-    if (!text || text === "Thinking...") return;
-    speakText(text);
-  }
-</script>
-
-
-
-</body>
+  </body>
 </html>

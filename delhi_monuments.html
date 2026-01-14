@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Delhi Monuments Map</title>
+
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css"
+    />
+
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        background: linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.15),
+            rgba(255, 255, 255, 0.05)
+          ),
+          url("assets/monument.jpg") no-repeat center center fixed;
+        background-size: cover;
+        backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(6px);
+
+        margin: 0;
+        padding: 15px;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        font-family: "Nunito", sans-serif;
+      }
+
+      .container {
+        width: 100%;
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        background: transparent !important;
+      }
+
+      .main-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-bottom: 15px;
+        flex-shrink: 0;
+      }
+
+      h1 {
+        margin: 0;
+        color: rgb(43, 32, 15);
+        font-weight: 800;
+        font-size: clamp(1.2rem, 4vw, 1.8rem);
+        text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8),
+          0 0 10px rgba(255, 255, 255, 0.5);
+      }
+
+      .map-button-group {
+        display: flex;
+        gap: 10px;
+      }
+
+      button {
+        padding: 8px 16px;
+        border-radius: 8px;
+        border: none;
+        font-weight: bold;
+        cursor: pointer;
+        white-space: nowrap;
+      }
+
+      .back-btn {
+        background-color: #7f8c8d;
+        color: white;
+      }
+      .clear-btn {
+        background-color: #e67e22;
+        color: white;
+      }
+
+      /* 3. MAP SCREEN PAR FIT HONE KE LIYE */
+      .map-wrapper {
+        flex-grow: 1;
+        width: 100%;
+        position: relative;
+        margin-bottom: 5px;
+      }
+
+      #map {
+        height: 100%;
+        width: 100%;
+        border-radius: 12px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        z-index: 1;
+        flex-grow: 1;
+        height: 100% !important;
+        background: rgba(255, 255, 255, 0.5);
+      }
+
+      @media (max-width: 600px) {
+        .main-header {
+          flex-direction: column;
+          gap: 10px;
+          text-align: center;
+        }
+        .map-button-group {
+          width: 100%;
+        }
+        .map-button-group button {
+          flex: 1;
+        }
+        .leaflet-routing-container {
+          display: none !important;
+        }
+        @media (max-width: 600px) {
+          .leaflet-routing-container {
+            display: block !important;
+            position: fixed !important;
+            bottom: 0 !important;
+            left: 0 !important;
+            width: 100% !important;
+            max-height: 30% !important;
+            overflow-y: auto !important;
+            background-color: white !important;
+            z-index: 9999 !important;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
+            padding: 10px;
+            font-size: 12px;
+          }
+
+          #map {
+            height: 60vh;
+          }
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <header class="main-header">
+        <h1>Echoes of Old Delhi</h1>
+        <div class="map-button-group">
+          <button class="back-btn" onclick="goBack()">← Back</button>
+          <button class="clear-btn" onclick="clearMap()">Clear Route</button>
+        </div>
+      </header>
+
+      <div class="map-wrapper">
+        <div id="map"></div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
+
+    <script>
+      const map = L.map("map").setView([28.6139, 77.209], 12);
+
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution: "&copy; OpenStreetMap contributors",
+      }).addTo(map);
+
+      window.onload = function () {
+        getUserLocation();
+      };
+
+      const monuments = [
+        { name: "Red Fort (Lal Qila)", coords: [28.6562, 77.241] },
+        { name: "Qutub Minar", coords: [28.5244, 77.1855] },
+        { name: "Humayun's Tomb", coords: [28.5933, 77.2507] },
+        { name: "India Gate", coords: [28.6129, 77.2295] },
+        { name: "Jantar Mantar", coords: [28.6271, 77.2166] },
+        { name: "Lotus Temple", coords: [28.5535, 77.2588] },
+        { name: "Jama Masjid", coords: [28.6507, 77.2334] },
+      ];
+
+      let currentRoute = null;
+      let userMarker = null;
+      let userCoordsCache = null;
+
+      function addMonument(place) {
+        const marker = L.marker(place.coords).addTo(map);
+        marker.bindPopup(`<strong>${place.name}</strong>`);
+        marker.on("click", () => calculateRouteFromUser(place.coords));
+      }
+
+      monuments.forEach(addMonument);
+
+      function getUserLocation() {
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(
+            (position) => {
+              userCoordsCache = [
+                position.coords.latitude,
+                position.coords.longitude,
+              ];
+              if (userMarker) map.removeLayer(userMarker);
+              userMarker = L.circleMarker(userCoordsCache, {
+                radius: 8,
+                fillColor: "#3498db",
+                color: "#fff",
+                weight: 2,
+                fillOpacity: 1,
+              })
+                .addTo(map)
+                .bindPopup("You are here");
+            },
+            () => {
+              console.log("Location access denied.");
+            }
+          );
+        }
+      }
+
+      function calculateRouteFromUser(destinationCoords) {
+        if (!userCoordsCache) {
+          alert("Getting your location... please wait or enable GPS.");
+          getUserLocation();
+          return;
+        }
+
+        if (currentRoute) map.removeControl(currentRoute);
+        currentRoute = L.Routing.control({
+          waypoints: [L.latLng(userCoordsCache), L.latLng(destinationCoords)],
+          createMarker: () => null,
+          lineOptions: { styles: [{ color: "#e67e22", weight: 6 }] },
+          addWaypoints: false,
+        }).addTo(map);
+      }
+
+      function clearMap() {
+        if (currentRoute) {
+          map.removeControl(currentRoute);
+          currentRoute = null;
+        }
+        map.setView([28.6139, 77.209], 12);
+      }
+
+      function goBack() {
+        window.history.back();
+      }
+
+      map.on("dblclick", (e) => {
+        const siteName = prompt("Enter site name:");
+        if (siteName)
+          addMonument({ name: siteName, coords: [e.latlng.lat, e.latlng.lng] });
+      });
+      map.doubleClickZoom.disable();
+    </script>
+  </body>
+</html>

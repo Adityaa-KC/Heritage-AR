@@ -1,0 +1,395 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:ital,opsz,wght@0,18..144,300..900;1,18..144,300..900&display=swap');
+
+
+body {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05)),
+    url("assets/monument.jpg") no-repeat center center / cover;
+
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+
+  font-family: "Nunito", sans-serif;
+}
+
+.heading .section-title,
+.archive-content h3,
+.feature-card h3 {
+  font-family: "merriweather", serif;
+}
+
+header {
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+
+  border-radius: 14px;
+  margin-top: 16px;
+  padding: 10px 18px;
+}
+
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.container {
+  max-width: 80vw;
+}
+
+.navbar {
+  display: flex;
+  height: 67px;
+  
+}
+
+.navbar li {
+  list-style: none;
+  margin: 0 12px;
+}
+
+.navbar li:hover {
+  opacity: 0.7;
+  transform: translateY(-4px);
+
+}
+
+.navbar a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.navbar a:hover {
+  opacity: 0.7;
+}
+
+.navbar a:visited {
+  color: inherit;
+}
+
+.topleft {
+  width: 50%;
+  height: 50vh;
+}
+
+.topleft h1 {
+  font-size: 2.6rem;
+  color: #2c2c2c;
+}
+
+.topleft p {
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: #333;
+  max-width: 90%;
+}
+
+.topright {
+  width: 50%;
+  height: 50vh;
+  overflow: hidden;
+}
+
+.topright img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 18px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+}
+
+.section1 {
+  margin-top: 40px;
+  background: rgba(255, 255, 255, 0.28);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 20px;
+  padding: 30px;
+}
+
+.logo {
+  font-size: 1.3rem;
+}
+
+.btn {
+  backdrop-filter: blur(6px);
+  background: rgba(222, 158, 54, 0.85);
+  transition: all 0.3s ease;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
+}
+
+.section-title {
+  font-size: 2.2rem;
+  margin-bottom: 25px;
+  color: #2c2c2c;
+}
+
+.section2,
+.section3,
+.section4 {
+  margin-top: 60px;
+  padding: 35px;
+  background: rgba(255, 255, 255, 0.28);
+  backdrop-filter: blur(12px);
+  border-radius: 20px;
+}
+
+.feature-wrapper {
+  gap: 30px;
+}
+
+.feature-card {
+  width: 50%;
+  padding: 25px;
+  background: rgba(255, 255, 255, 0.35);
+  border-radius: 18px;
+}
+
+.feature-card h3 {
+  margin-bottom: 12px;
+}
+
+.micro-copy {
+  display: inline-block;
+  margin-top: 12px;
+  font-size: 0.85rem;
+  opacity: 0.7;
+}
+
+.tech-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 25px;
+}
+
+.tech-card {
+  padding: 22px;
+  background: rgba(255, 255, 255, 0.35);
+  border-radius: 18px;
+}
+
+.impact-text {
+  max-width: 70%;
+  line-height: 1.7;
+}
+
+.footer {
+  margin: 60px 0 30px;
+  padding: 25px;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(10px);
+  border-radius: 18px;
+}
+
+.footer-links {
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+  gap: 25px;
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+/*archives starts here*/
+.archives-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 30px;
+  margin-top: 40px;
+}
+
+.archive-card {
+  background: rgba(255, 255, 255, 0.35);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.archive-card img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+}
+
+.archive-content {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.archive-content h3 {
+  font-size: 1.3rem;
+  color: #2c2c2c;
+}
+
+.archive-content p {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: #333;
+}
+
+.archive-meta {
+  font-size: 0.85rem;
+  opacity: 0.7;
+}
+
+.archive-intro {
+  max-width: 650px;
+  margin-top: 8px;
+  color: #333;
+  opacity: 0.8;
+}
+
+.back-btn {
+  background: rgba(255, 255, 255, 0.35);
+  backdrop-filter: blur(10px);
+  border: none;
+  border-radius: 12px;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  margin-bottom: 20px;
+  color: #2c2c2c;
+}
+
+.clear-btn {
+    position: absolute;
+    top: 80px; /* Below the back button */
+    left: 20px;
+    z-index: 1000;
+    background: #e74c3c;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+.clear-btn:hover { background: #c0392b; }
+.back-btn:hover {
+  opacity: 0.8;
+}
+
+@media (max-width: 900px) {
+  .container {
+    max-width: 92vw;
+  }
+
+  .navbar {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .section1 .flex,
+  .feature-wrapper {
+    flex-direction: column;
+  }
+
+  .topleft,
+  .topright,
+  .feature-card {
+    width: 100%;
+    height: auto;
+  }
+
+  .topright {
+    margin-top: 20px;
+    height: 40vh;
+  }
+
+  .impact-text {
+    max-width: 100%;
+  }
+
+  .tech-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .archives-grid {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+@media (max-width: 600px) {
+
+
+  body {
+    overflow-x: hidden;
+  }
+
+
+  nav {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 16px;
+    width: 100%;
+  }
+
+
+  .navbar {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px 16px;
+    width: 100%;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .navbar li {
+    min-width: 0;
+  }
+
+  /* frustrating as hell */
+  .navbar li:last-child {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: flex-end;
+
+    padding-right: 2px;
+  }
+
+
+  .navbar li:last-child .btn {
+    padding: 7px 18px;
+    line-height: 1.1;
+  }
+
+
+  .section1 .flex {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .topleft,
+  .topright {
+    width: 100%;
+    padding: 0;
+  }
+
+  .topleft h1 {
+    font-size: 2rem;
+    line-height: 1.2;
+  }
+
+  .topright img {
+    width: 100%;
+    height: auto;
+    border-radius: 20px;
+    display: block;
+  }
+
+}
