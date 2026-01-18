@@ -221,9 +221,7 @@
         e.preventDefault();
 
         if (!("BarcodeDetector" in window)) {
-          alert(
-            "QR scanning is supported in Google Chrome. Please use Chrome.",
-          );
+          alert("QR scanning works best in Google Chrome.");
           return;
         }
 
@@ -239,42 +237,59 @@
             facingMode: { ideal: "environment" },
             width: { ideal: 1280 },
             height: { ideal: 720 },
-            zoom: 1,
           },
         });
 
         video.srcObject = videoStream;
 
-        scanLoop();
+        scanning = true;
+
+        video.onloadedmetadata = () => {
+          video.play();
+          scanLoop();
+        };
       }
 
+      let scanning = false;
+
       async function scanLoop() {
+        if (!scanning) return;
+
         const video = document.getElementById("video");
 
-        if (video.readyState !== 4) {
+        // 🔑 CRITICAL CHECK
+        if (video.videoWidth === 0 || video.videoHeight === 0) {
           requestAnimationFrame(scanLoop);
           return;
         }
 
-        const barcodes = await detector.detect(video);
+        try {
+          const barcodes = await detector.detect(video);
 
-        if (barcodes.length > 0) {
-          const qrValue = barcodes[0].rawValue;
+          if (barcodes.length > 0) {
+            const qrValue = barcodes[0].rawValue;
 
-          stopScanner();
+            stopScanner();
 
-          // ✅ Redirect to monument model page
-          window.location.href = qrValue;
-          return;
+            // Redirect
+            window.location.href = qrValue;
+            return;
+          }
+        } catch (err) {
+          console.error("QR detect error:", err);
         }
 
-        requestAnimationFrame(scanLoop);
+        // Throttle detection (important)
+        setTimeout(() => requestAnimationFrame(scanLoop), 150);
       }
 
       function stopScanner() {
+        scanning = false;
+
         if (videoStream) {
           videoStream.getTracks().forEach((track) => track.stop());
         }
+
         document.getElementById("scanner").style.display = "none";
       }
 
