@@ -1,122 +1,128 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Nalanda Vishwavidyalaya</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Nalanda Vishwavidyalaya</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- Model Viewer -->
-  <script type="module"
-    src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js">
-  </script>
+    <!-- Model Viewer -->
+    <script
+      type="module"
+      src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"
+    ></script>
 
-  <link rel="stylesheet" href="css/style.css">
-</head>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
 
-<body>
+  <body>
+    <!-- LOCAL 3D MODEL -->
+    <model-viewer
+      src="assets/nalanda.glb"
+      alt="Nalanda 3D Model"
+      camera-controls
+      enable-pan
+      auto-rotate
+      min-camera-orbit="auto auto 1m"
+      max-camera-orbit="auto auto 5m"
+      camera-target="0m -0.1m 0.1m"
+      exposure="1.25"
+      tone-mapping="aces"
+      environment-image="https://modelviewer.dev/shared-assets/environments/spruit_sunrise_1k_HDR.hdr"
+      skybox-image="https://modelviewer.dev/shared-assets/environments/spruit_sunrise_1k_HDR.hdr"
+      shadow-intensity="1"
+      shadow-softness="0.8"
+    >
+    </model-viewer>
 
-  <!-- LOCAL 3D MODEL -->
-  <model-viewer
-    src="assets/nalanda.glb"
-    alt="Nalanda 3D Model"
+    <a
+      href="index.html"
+      style="
+        position: fixed;
+        top: 16px;
+        left: 16px;
+        z-index: 1000;
+        background: rgba(0, 0, 0, 0.6);
+        color: white;
+        padding: 8px 12px;
+        border-radius: 10px;
+        text-decoration: none;
+        font-size: 14px;
+      "
+    >
+      ⬅ Home
+    </a>
 
-    camera-controls
-    enable-pan
-    auto-rotate
+    <!-- AI UI -->
+    <div id="ui">
+      <button onclick="handleTalk()">Talk to Monument</button>
+      <button id="backBtn" onclick="handleBack()" style="display: none">
+        ⬅ Back
+      </button>
+      <p id="story"></p>
 
-    min-camera-orbit="auto auto 1m"
-    max-camera-orbit="auto auto 5m"
-    camera-target="0m -0.1m 0.1m"
+      <input id="questionInput" placeholder="Ask about Nalanda university" />
 
-    exposure="1.25"
-    tone-mapping="aces"
+      <button onclick="handleQuestion()">Ask</button>
+      <button onclick="handleSpeak()">🔊 Listen</button>
+    </div>
 
-    environment-image="https://modelviewer.dev/shared-assets/environments/spruit_sunrise_1k_HDR.hdr"
-    skybox-image="https://modelviewer.dev/shared-assets/environments/spruit_sunrise_1k_HDR.hdr"
+    <script src="config.js"></script>
+    <script src="js/llm.js"></script>
 
-    shadow-intensity="1"
-    shadow-softness="0.8">
-  </model-viewer>
+    <script>
+      const MONUMENT = "Nalanda University";
 
-  <!-- AI UI -->
-  <div id="ui">
-    <button onclick="handleTalk()">Talk to Monument</button>
-    <button id="backBtn" onclick="handleBack()" style="display: none">⬅ Back</button>
-    <p id="story"></p>
+      async function handleTalk() {
+        const out = document.getElementById("story");
+        const backBtn = document.getElementById("backBtn");
 
+        out.innerText = "Thinking...";
+        backBtn.style.display = "block";
 
-
-    <input
-      id="questionInput"
-      placeholder="Ask about Nalanda university"
-    />
-
-    <button onclick="handleQuestion()">Ask</button>
-    <button onclick="handleSpeak()">🔊 Listen</button>
-  </div>
-
-  <script src="config.js"></script>
-  <script src="js/llm.js"></script>
-
-  <script>
-    const MONUMENT = "Nalanda University";
-
-    async function handleTalk() {
-  const out = document.getElementById("story");
-  const backBtn = document.getElementById("backBtn");
-
-  out.innerText = "Thinking...";
-  backBtn.style.display = "block";
-
-  out.innerText = await talkToMonument(MONUMENT);
-}
-
-
-    async function handleQuestion() {
-  const input = document.getElementById("questionInput");
-  const out = document.getElementById("story");
-  const backBtn = document.getElementById("backBtn");
-
-  if (!input.value) return;
-
-  out.innerText = "Thinking...";
-  backBtn.style.display = "block";
-
-  out.innerText = await askQuestion(MONUMENT, input.value);
-  input.value = "";
-}
-
-
-  </script>
-
-  
-  <script>
-    function speakText(text) {
-      if (!("speechSynthesis" in window)) {
-        alert("Text-to-Speech not supported on this browser");
-        return;
+        out.innerText = await talkToMonument(MONUMENT);
       }
 
-      // Stop any ongoing speech
-      window.speechSynthesis.cancel();
+      async function handleQuestion() {
+        const input = document.getElementById("questionInput");
+        const out = document.getElementById("story");
+        const backBtn = document.getElementById("backBtn");
 
-      const utterance = new SpeechSynthesisUtterance(text);
+        if (!input.value) return;
 
-      // Voice tuning (important)
-      utterance.lang = "hi-IN";      // Indian Hindi
-      utterance.rate = 0.95;         // Natural pace
-      utterance.pitch = 1;
-      utterance.volume = 1;
+        out.innerText = "Thinking...";
+        backBtn.style.display = "block";
 
-      window.speechSynthesis.speak(utterance);
-    }
-  </script>
+        out.innerText = await askQuestion(MONUMENT, input.value);
+        input.value = "";
+      }
+    </script>
 
-  <script>
-    function handleSpeak() {
-      speakText(document.getElementById("story").innerText);
-    }
-  </script>
+    <script>
+      function speakText(text) {
+        if (!("speechSynthesis" in window)) {
+          alert("Text-to-Speech not supported on this browser");
+          return;
+        }
 
-</body>
+        // Stop any ongoing speech
+        window.speechSynthesis.cancel();
+
+        const utterance = new SpeechSynthesisUtterance(text);
+
+        // Voice tuning (important)
+        utterance.lang = "hi-IN"; // Indian Hindi
+        utterance.rate = 0.95; // Natural pace
+        utterance.pitch = 1;
+        utterance.volume = 1;
+
+        window.speechSynthesis.speak(utterance);
+      }
+    </script>
+
+    <script>
+      function handleSpeak() {
+        speakText(document.getElementById("story").innerText);
+      }
+    </script>
+  </body>
 </html>
