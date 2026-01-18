@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -12,15 +12,14 @@
       <header>
         <nav class="flex justify-between">
           <div class="font-bold flex item-center text-blue logo heading">
-            HEIRS OF HISTORY.
+            HEIRS OF HISTORY
           </div>
           <ul class="navbar flex item-center">
-            <li>Scan</li>
-            <li>Our Mission</li>
+            <li><a href="#" id="scanBtn">Scan</a></li>
+            <li><a href="#Mission">Our Mission</a></li>
             <li><a href="archieves.html">Archives</a></li>
             <li><a href="delhi_monuments.html">Delhi Monuments</a></li>
             <li>Contact Us</li>
-            <li><button class="btn">Explore</button></li>
           </ul>
         </nav>
       </header>
@@ -41,8 +40,8 @@
           </div>
         </section>
 
-        <section class="section2">
-          <h2 class="section-title">Point. Scan. Restore.</h2>
+        <section class="section2" id="Mission">
+          <h2 class="section-title">POINT. SCAN. RESTORE.</h2>
 
           <div class="flex feature-wrapper">
             <div class="feature-card">
@@ -59,12 +58,12 @@
             </div>
 
             <div class="feature-card">
-              <h3>Gemini-Powered Intelligence</h3>
+              <h3>AI-Assisted Audio Storytelling</h3>
               <p>
-                Scan any inscription, statue, or ruin. Our integrated Gemini AI
-                identifies the artifact in real time, translating ancient
-                scripts and narrating stories with a modern, conversational
-                edge.
+                Scan an inscription, plaque, or monument marker to unlock
+                narrated historical context. Using AI-powered speech synthesis
+                built into modern browsers, the system reads out curated stories
+                in a clear, natural voice.
               </p>
               <span class="micro-copy">History is too cool to be boring.</span>
             </div>
@@ -76,35 +75,44 @@
 
           <div class="tech-grid">
             <div class="tech-card">
-              <h4>Geospatial Creator</h4>
+              <h4>WebXR & WebGL Foundations</h4>
               <p>
-                We leverage Google Maps data to anchor 3D content to real-world
-                coordinates. History doesn’t float—it stays exactly where it was
-                built.
+                Our experience is built on modern WebXR and WebGL standards,
+                implemented and led by Google through the Chrome platform. This
+                enables camera-based, AR-like 3D experiences on mobile devices
+                using only the browser.
               </p>
             </div>
 
             <div class="tech-card">
-              <h4>ARCore Extensions</h4>
+              <h4>Interactive Mapping & Route Intelligence</h4>
               <p>
-                Realistic lighting, environmental occlusion, and plane detection
-                make our digital assets feel like physical objects.
+                The platform is built on Leaflet.js, a lightweight open-source
+                mapping library, to visualize Delhi’s heritage monuments on an
+                interactive map. Using Leaflet Routing Machine, users can
+                generate routes between monuments, enabling walking or
+                travel-based heritage trails.
               </p>
             </div>
 
             <div class="tech-card">
-              <h4>Gemini Pro Multimodal</h4>
+              <h4>AI-Powered Voice Narration</h4>
               <p>
-                Visual-to-Text processing. We don’t just show you data; we
-                understand what you are looking at.
+                We integrate Google’s Web Speech API to provide AI-driven
+                text-to-speech narration. Monument stories are read aloud using
+                natural-sounding voices, improving accessibility and engagement.
+                This uses machine-learning speech synthesis built into Google
+                Chrome — no external servers or exposed API keys.
               </p>
             </div>
 
             <div class="tech-card">
-              <h4>Firebase</h4>
+              <h4>Google Chrome Platform Capabilities</h4>
               <p>
-                Real-time synchronization for community-led documentation and
-                global high-scores in our “Heritage Hunt” mode.
+                The project relies on core Google Chrome technologies including
+                secure camera access, on-device machine learning, WebGL
+                rendering, and HTTPS security. These capabilities allow QR-to-3D
+                workflows and smooth real-time interaction.
               </p>
             </div>
           </div>
@@ -137,5 +145,125 @@
         </div>
       </footer>
     </div>
+
+    <!-- QR Scanner Overlay -->
+    <div
+      id="scanner"
+      style="
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: black;
+        z-index: 9999;
+      "
+    >
+      <video
+        id="video"
+        autoplay
+        playsinline
+        style="width: 100%; height: 100%; object-fit: cover"
+      ></video>
+
+      <!-- Instruction -->
+      <div
+        style="
+          position: absolute;
+          bottom: 20px;
+          left: 50%;
+          transform: translateX(-50%);
+          color: white;
+          background: rgba(0, 0, 0, 0.6);
+          padding: 10px 14px;
+          border-radius: 12px;
+          font-size: 14px;
+        "
+      >
+        Point camera at QR code
+      </div>
+
+      <!-- Close Button -->
+      <button
+        onclick="closeScanner()"
+        style="
+          position: absolute;
+          top: 16px;
+          right: 16px;
+          z-index: 10;
+          padding: 8px 12px;
+          border: none;
+          border-radius: 10px;
+          font-size: 14px;
+        "
+      >
+        ✖ Close
+      </button>
+    </div>
+
+    <script>
+      let videoStream;
+      let detector;
+
+      document.getElementById("scanBtn").addEventListener("click", startScan);
+
+      async function startScan(e) {
+        e.preventDefault();
+
+        if (!("BarcodeDetector" in window)) {
+          alert(
+            "QR scanning is supported in Google Chrome. Please use Chrome.",
+          );
+          return;
+        }
+
+        detector = new BarcodeDetector({ formats: ["qr_code"] });
+
+        const scanner = document.getElementById("scanner");
+        const video = document.getElementById("video");
+
+        scanner.style.display = "block";
+
+        videoStream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: "environment" },
+        });
+
+        video.srcObject = videoStream;
+
+        scanLoop();
+      }
+
+      async function scanLoop() {
+        const video = document.getElementById("video");
+
+        if (video.readyState !== 4) {
+          requestAnimationFrame(scanLoop);
+          return;
+        }
+
+        const barcodes = await detector.detect(video);
+
+        if (barcodes.length > 0) {
+          const qrValue = barcodes[0].rawValue;
+
+          stopScanner();
+
+          // ✅ Redirect to monument model page
+          window.location.href = qrValue;
+          return;
+        }
+
+        requestAnimationFrame(scanLoop);
+      }
+
+      function stopScanner() {
+        if (videoStream) {
+          videoStream.getTracks().forEach((track) => track.stop());
+        }
+        document.getElementById("scanner").style.display = "none";
+      }
+
+      function closeScanner() {
+        stopScanner();
+      }
+    </script>
   </body>
 </html>
